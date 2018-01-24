@@ -282,7 +282,7 @@ def email_event_owner_on_add_comment(sender, instance, **kwargs):
     owner = instance.event.owner
     event_url = reverse('events_view_event', kwargs={'slug': event.slug})
     ctx_data = {'event': event, 'owner': owner, 'user': instance.user,
-                'comment': instance.comment, 'event_url': event_url}
+                'comment': instance.comment, 'event_url': event_url, 'commenter': instance.user}
     if owner.userprofile.receive_email_on_add_event_comment:
         subject = subject % (instance.user.get_full_name(), instance.event.name)
         send_remo_mail.delay(subject=subject, recipients_list=[owner.id],
