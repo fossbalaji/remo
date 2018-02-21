@@ -8,7 +8,8 @@ import happyforms
 from remo.profiles.models import FunctionalArea
 from remo.reports import UNLISTED_ACTIVITIES
 from remo.reports.models import Activity, Campaign, NGReport, NGReportComment
-
+from datetime import datetime
+import pytz
 
 # New Generation reporting system
 class NGReportForm(happyforms.ModelForm):
@@ -17,7 +18,7 @@ class NGReportForm(happyforms.ModelForm):
         queryset=Activity.active_objects.exclude(name__in=UNLISTED_ACTIVITIES))
     campaign = forms.ModelChoiceField(queryset=Campaign.active_objects.all())
     functional_areas = forms.ChoiceField()
-
+    timezone = forms.CharField()
     def __init__(self, *args, **kwargs):
         """ Initialize form.
 
@@ -31,6 +32,7 @@ class NGReportForm(happyforms.ModelForm):
         self.fields['campaign'].empty_label = 'Please select an initiative.'
         area_choices = FunctionalArea.active_objects.values_list('id', 'name')
         self.fields['functional_areas'].choices = area_choices
+        self.timezone = "America/New_York"
 
         # Dynamic functional_areas field
         if self.instance.id:
@@ -43,9 +45,15 @@ class NGReportForm(happyforms.ModelForm):
             self.fields['functional_areas'].choices = choices
             self.fields['functional_areas'].initial = initial_category.id
 
+    def clean_timezone(self):
+        if 'timezone' in self.cleaned_data:
+            self.timezone = self.cleaned_data.get("timezone")
+        return self.cleaned_data.get("timezone")
+
     def clean_report_date(self):
         """Clean report_date field."""
-        if self.cleaned_data['report_date'] > now().date():
+        user_timezone = pytz.timezone(self.timezone)
+        if self.cleaned_data['report_date'] > datetime.now(user_timezone).date():
             raise ValidationError('Report date cannot be in the future.')
         return self.cleaned_data['report_date']
 
@@ -65,7 +73,7 @@ class NGReportForm(happyforms.ModelForm):
 
     class Meta:
         model = NGReport
-        fields = ['report_date', 'activity', 'campaign',
+        fields = ['timezone', 'report_date', 'activity', 'campaign',
                   'longitude', 'latitude', 'location',
                   'link', 'link_description', 'activity_description']
         widgets = {'longitude': forms.HiddenInput(),
