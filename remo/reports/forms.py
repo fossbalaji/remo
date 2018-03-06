@@ -1,7 +1,6 @@
 from django import forms
 from django.core.exceptions import ValidationError
 from django.db.models import Q
-from django.utils.timezone import now
 
 import happyforms
 
@@ -19,6 +18,7 @@ class NGReportForm(happyforms.ModelForm):
     campaign = forms.ModelChoiceField(queryset=Campaign.active_objects.all())
     functional_areas = forms.ChoiceField()
     timezone = forms.CharField()
+
     def __init__(self, *args, **kwargs):
         """ Initialize form.
 

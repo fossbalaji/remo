@@ -51,6 +51,5 @@
     // set date picker defaults
     initDatePicker();
 
-    // set the timezone here
     $("#timezone").val(Intl.DateTimeFormat().resolvedOptions().timeZone);
 })(jQuery);
