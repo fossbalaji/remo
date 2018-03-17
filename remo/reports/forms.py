@@ -11,6 +11,8 @@ from datetime import datetime
 import pytz
 
 # New Generation reporting system
+
+
 class NGReportForm(happyforms.ModelForm):
     report_date = forms.DateField(input_formats=['%d %B %Y'])
     activity = forms.ModelChoiceField(
