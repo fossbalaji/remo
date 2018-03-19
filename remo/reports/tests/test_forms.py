@@ -29,6 +29,7 @@ class NGReportFormTests(RemoTestCase):
             'link_description': 'Test link.',
             'activity_description': 'Test activity',
             'functional_areas': functional_area.id,
+            'timezone': 'America/Los_Angeles'
         }
         form = NGReportForm(data, instance=NGReport(user=user))
         ok_(form.is_valid())
@@ -80,6 +81,7 @@ class InactiveCategoriesTest(RemoTestCase):
 
         data = model_to_dict(report)
         data['functional_areas'] = active_area.id
+        data['timezone'] = 'America/Los_Angeles'
         form = NGReportForm(data, instance=report)
         ok_(form.is_valid())
         result = form.save()
