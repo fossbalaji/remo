@@ -47,11 +47,6 @@ class NGReportForm(happyforms.ModelForm):
             self.fields['functional_areas'].choices = choices
             self.fields['functional_areas'].initial = initial_category.id
 
-    def clean_timezone(self):
-        if 'timezone' in self.cleaned_data:
-            self.timezone = self.cleaned_data.get("timezone")
-        return self.cleaned_data.get("timezone")
-
     def clean_report_date(self):
         """Clean report_date field."""
         user_timezone = pytz.timezone(self.timezone)
